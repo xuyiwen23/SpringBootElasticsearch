@@ -3,14 +3,17 @@ package com.example.elastic.config;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.wildcardQuery;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -29,7 +32,9 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ScrolledPage;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.DeleteQuery;
 import org.springframework.data.elasticsearch.core.query.GetQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -112,7 +117,6 @@ public class ElasticsearchConfigTest {
         params.put("gender","M");
 
         UpdateRequest updateRequest = new UpdateRequest().doc(params);
-
         UpdateQueryBuilder updateQueryBuilder = new UpdateQueryBuilder();
         updateQueryBuilder.withId("999");
         updateQueryBuilder.withUpdateRequest(updateRequest);
@@ -254,22 +258,55 @@ public class ElasticsearchConfigTest {
         users.forEach(user -> System.out.println(user));
     }
 
+    //insert
+    @Test
+    public void insert() {
+        User user = new User();
+        user.setTest_2int(10);
+        user.setTest2String("asdas");
 
+        IndexQuery indexQuery = new IndexQuery();
+        indexQuery.setId("1006");
+        indexQuery.setObject(user);
+        indexQuery.setIndexName("xyw");
+        indexQuery.setType("doc");
 
+        String index = elasticsearchTemplate.index(indexQuery);
+        System.out.println(index);
+    }
 
+    @Test
+    public void delete(){
+//        String delete = elasticsearchTemplate.delete(User.class, "10005");
+//        System.out.println(delete);
 
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        BoolQueryBuilder must = boolQueryBuilder.must(matchQuery("firstname", "yw"));
 
+        DeleteQuery deleteQuery = new DeleteQuery();
+        deleteQuery.setIndex("xyw");
+        deleteQuery.setType("doc");
+        deleteQuery.setQuery(must);
 
+        elasticsearchTemplate.delete(deleteQuery);
+    }
 
+//    前缀
+    @Test
+    public void prefix(){
+        NativeSearchQuery build = new NativeSearchQueryBuilder().withQuery(prefixQuery("lastname","Ba")).build();
+        List<User> users = elasticsearchTemplate.queryForList(build, User.class);
+        users.forEach(user -> System.out.println(user));
+    }
 
-
-
-
-
-
-
-
-
-
+//    通配符查询
+//"*",它匹配任何字符序列（包括空字符）
+//"?",它匹配任何单个字符
+    @Test
+    public void wildcard(){
+        NativeSearchQuery build = new NativeSearchQueryBuilder().withQuery(wildcardQuery("email","*@senmei.com")).build();
+        List<User> users = elasticsearchTemplate.queryForList(build, User.class);
+        users.forEach(user -> System.out.println(user));
+    }
 
 }

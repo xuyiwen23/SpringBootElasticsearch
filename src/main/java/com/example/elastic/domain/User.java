@@ -17,6 +17,18 @@ public class User {
     public String id;
 
     @Field(type = FieldType.Integer)
+    public int test_int;
+
+    @Field(type = FieldType.keyword)
+    public String testString;
+
+    @Field(type = FieldType.Integer)
+    public int test_2int;
+
+    @Field(type = FieldType.keyword)
+    public String test2String;
+
+    @Field(type = FieldType.Integer)
     public int account_number;
 
     @Field(type = FieldType.Integer)
@@ -167,10 +179,44 @@ public class User {
         this.body = body;
     }
 
+    public int getTest_int() {
+        return test_int;
+    }
+
+    public void setTest_int(int test_int) {
+        this.test_int = test_int;
+    }
+
+    public String getTestString() {
+        return testString;
+    }
+
+    public void setTestString(String testString) {
+        this.testString = testString;
+    }
+
+    public int getTest_2int() {
+        return test_2int;
+    }
+
+    public void setTest_2int(int test_2int) {
+        this.test_2int = test_2int;
+    }
+
+    public String getTest2String() {
+        return test2String;
+    }
+
+    public void setTest2String(String test2String) {
+        this.test2String = test2String;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
+                ", test_int=" + test_int +
+                ", testString='" + testString + '\'' +
                 ", account_number=" + account_number +
                 ", balance=" + balance +
                 ", firstname='" + firstname + '\'' +

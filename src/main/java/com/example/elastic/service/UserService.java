@@ -8,4 +8,6 @@ import com.example.elastic.domain.User;
  */
 public interface UserService {
     User findOne();
+
+    void test();
 }

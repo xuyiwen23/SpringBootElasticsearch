@@ -54,9 +54,10 @@ public class UserRepositoryTest {
     @Test
     public void insertUser(){
         User user = new User();
-        user.setId("100007");
+        user.setId("10005");
         user.setAge(10);
         user.setLastname("X");
+        user.setTest_int(1000);
 
         User save = userRepository.save(user);
         System.out.println(user);

@@ -2,6 +2,7 @@ package com.example.elastic.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.elastic.domain.User;
@@ -17,10 +18,21 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @ResponseBody
     @RequestMapping("/")
     public User findOne(){
         User user = userService.findOne();
         return user;
     }
 
+    @ResponseBody
+    @RequestMapping("test")
+    public User test(){
+        userService.test();
+        return null;
+    }
+
 }
+
+
+
